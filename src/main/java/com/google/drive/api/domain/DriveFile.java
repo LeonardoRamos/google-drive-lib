@@ -2,7 +2,7 @@ package com.google.drive.api.domain;
 
 import java.util.Calendar;
 
-import com.google.drive.api.ApiConstants.GOOGLEAPI;
+import com.google.drive.api.DriveApiConstants.GOOGLEAPI;
 
 /**
  * Entity responsible to represent a file retrieved from Google Drive.

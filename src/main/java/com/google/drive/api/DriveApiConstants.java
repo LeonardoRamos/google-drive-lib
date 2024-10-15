@@ -1,8 +1,8 @@
 package com.google.drive.api;
 
-public final class ApiConstants {
+public final class DriveApiConstants {
 	
-	private ApiConstants() {
+	private DriveApiConstants() {
 		
 	}
 	

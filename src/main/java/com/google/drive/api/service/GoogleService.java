@@ -7,8 +7,8 @@ import java.util.Date;
 
 import com.google.auth.oauth2.AccessToken;
 import com.google.auth.oauth2.GoogleCredentials;
-import com.google.drive.api.ApiConstants.GOOGLEAPI;
-import com.google.drive.api.ApiConstants.MSGERROR;
+import com.google.drive.api.DriveApiConstants.GOOGLEAPI;
+import com.google.drive.api.DriveApiConstants.MSGERROR;
 import com.google.drive.api.exception.GoogleApiSecurityException;
 
 /**

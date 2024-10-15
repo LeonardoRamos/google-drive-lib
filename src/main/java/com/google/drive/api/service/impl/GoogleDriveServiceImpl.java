@@ -21,8 +21,8 @@ import com.google.api.services.drive.model.FileList;
 import com.google.api.services.drive.model.Permission;
 import com.google.auth.http.HttpCredentialsAdapter;
 import com.google.auth.oauth2.GoogleCredentials;
-import com.google.drive.api.ApiConstants.GOOGLEAPI;
-import com.google.drive.api.ApiConstants.MSGERROR;
+import com.google.drive.api.DriveApiConstants.GOOGLEAPI;
+import com.google.drive.api.DriveApiConstants.MSGERROR;
 import com.google.drive.api.domain.DriveFile;
 import com.google.drive.api.domain.DriveFileList;
 import com.google.drive.api.exception.GoogleApiException;
@@ -277,7 +277,7 @@ public class GoogleDriveServiceImpl implements GoogleDriveService {
 	 * @return folder id
 	 * @throws IOException
 	 */
-	protected String getFolderIdByName(LinkedList<String> folderHierarchy) throws IOException {
+	private String getFolderIdByName(LinkedList<String> folderHierarchy) throws IOException {
 		String parentFolderId = null;
 		
 		for (String folderName : folderHierarchy) {

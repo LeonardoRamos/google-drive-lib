@@ -24,7 +24,7 @@ import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.FileList;
 import com.google.api.services.drive.model.Permission;
 import com.google.auth.oauth2.GoogleCredentials;
-import com.google.drive.api.ApiConstants.GOOGLEAPI;
+import com.google.drive.api.DriveApiConstants.GOOGLEAPI;
 import com.google.drive.api.domain.DriveFile;
 import com.google.drive.api.domain.DriveFileList;
 
