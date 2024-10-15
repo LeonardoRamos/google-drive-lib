@@ -3,7 +3,7 @@ Library responsible for intermediating Google Drive actions and basic functional
 
 ## Setting up
 
-Import the dependency on your project.
+Import the dependency in your project.
 
 ```xml
 <dependency>

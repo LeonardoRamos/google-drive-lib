@@ -27,6 +27,7 @@ import com.google.auth.oauth2.GoogleCredentials;
 import com.google.drive.api.DriveApiConstants.GOOGLEAPI;
 import com.google.drive.api.domain.DriveFile;
 import com.google.drive.api.domain.DriveFileList;
+import com.google.drive.api.exception.GoogleApiGeneralErrorException;
 
 @ActiveProfiles(profiles = "test")
 class GoogleDriveServiceImplTest {
@@ -78,6 +79,29 @@ class GoogleDriveServiceImplTest {
 		Assertions.assertEquals(result.get().getFileId(), expectedFile.getId());
 		Assertions.assertEquals(result.get().getFileName(), expectedFile.getName());
 		Assertions.assertEquals(result.get().getUrlExport(), GOOGLEAPI.DRIVE_BASE_EXPORT_URL + result.get().getFileId());
+	}
+	
+	@Test
+	void doGetFileByNameAndParentFolder_whenEmptyResult() throws IOException {
+		String fileName = "fileTest";
+		
+		String parentFolderName = "parentFolder";
+		String parentFolderId = "parentFolderId";
+		String childFolderName = "childFolder";
+		String childFolderId = "childFolderId";
+		
+		LinkedList<String> folderHierarchy = this.mockFolderDataCreateChild(parentFolderName, parentFolderId, childFolderName, childFolderId);
+		
+		Mockito.when(this.driveService.files()).thenReturn(this.files);
+		Mockito.when(this.files.list()).thenReturn(this.list);
+		Mockito.when(this.list.setQ(String.format(GOOGLEAPI.FILE_QUERY_IN_FOLDER, fileName, childFolderId))).thenReturn(this.list);
+		Mockito.when(this.list.setSpaces(GOOGLEAPI.DRIVE_SPACES)).thenReturn(this.list);
+		Mockito.when(this.list.setFields(GOOGLEAPI.FILE_FIELDS)).thenReturn(this.list);
+		Mockito.when(this.list.execute()).thenReturn(null);
+		
+		Optional<DriveFile> result = this.googleDriveService.doGetFileByNameAndParentFolder(folderHierarchy, fileName);
+		
+		Assertions.assertTrue(result.isEmpty());
 	}
 
 	private LinkedList<String> mockFolderDataCreateChild(String parentFolderName, String parentFolderId, String childFolderName, String childFolderId) throws IOException {
@@ -252,6 +276,34 @@ class GoogleDriveServiceImplTest {
 		Assertions.assertEquals(result.getFileId(), fileId);
 		Assertions.assertEquals(result.getFileName(), fileName);
 		Assertions.assertEquals(result.getUrlExport(), GOOGLEAPI.DRIVE_BASE_EXPORT_URL + fileId);
+	}
+	
+	@Test
+	void doUploadFileToFolder_whenErrorInUpload() throws IOException {
+		String fileName = "fileTest";
+		
+		String parentFolderName = "parentFolder";
+		String parentFolderId = "parentFolderId";
+		String childFolderName = "childFolder";
+		String childFolderId = "childFolderId";
+		
+		LinkedList<String> folderHierarchy = this.mockFolderData(parentFolderName, parentFolderId, childFolderName, childFolderId);
+		
+		Path path = java.nio.file.Files.createTempFile(fileName, ".txt");
+		java.nio.file.Files.write(path, fileName.getBytes());
+		java.io.File file = path.toFile();
+		file.deleteOnExit();
+		
+		File fileMetadata = new File();
+		fileMetadata.setName(file.getName());
+		fileMetadata.setParents(Collections.singletonList(childFolderId));
+
+		Mockito.when(this.driveService.files()).thenReturn(this.files);
+		Mockito.when(this.files.create(Mockito.any(), Mockito.any())).thenReturn(this.create);
+		Mockito.when(this.create.setFields(GOOGLEAPI.FILE_FIELDS)).thenReturn(this.create);
+		Mockito.when(this.create.execute()).thenReturn(null);
+		
+		Assertions.assertThrows(GoogleApiGeneralErrorException.class, () -> this.googleDriveService.doUploadFileToFolder(folderHierarchy, file, true));
 	}
 	
 	private LinkedList<String> mockFolderData(String parentFolderName, String parentFolderId, String childFolderName, String childFolderId) throws IOException {
