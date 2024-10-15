@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+	<name>google-drive-lib</name>
+	<version>1.0.0</version>
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.google.drive.api</groupId>
+	<artifactId>google-drive-lib</artifactId>
+	<description>Google Drive Lib</description>
+	<packaging>jar</packaging>
+
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>3.3.4</version>
+		<relativePath />
+	</parent>
+
+	<properties>
+		<java.version>21</java.version>
+		<maven.compiler.source>${java.version}</maven.compiler.source>
+		<maven.compiler.target>${java.version}</maven.compiler.target>
+		<downloadSources>true</downloadSources>
+		<downloadJavadocs>true</downloadJavadocs>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		
+		<!-- Dependencies -->
+		<google-api-client-version>2.7.0</google-api-client-version>
+		<google-api-services-drive-version>v3-rev20240914-2.0.0</google-api-services-drive-version>
+		<google-auth-library-oauth2-http-version>1.27.0</google-auth-library-oauth2-http-version>
+		<tika-core-version>2.9.2</tika-core-version>
+		
+		<!--  Plugins -->
+		<maven-eclipse-plugin-version>2.10</maven-eclipse-plugin-version>
+	</properties>
+
+	<profiles>
+		<profile>
+			<id>dev</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<dependencies>
+				<dependency>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-devtools</artifactId>
+				</dependency>
+			</dependencies>
+		</profile>
+		<profile>
+			<id>prd</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+		</profile>
+	</profiles>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		
+		<dependency>
+  			<groupId>com.google.auth</groupId>
+			<artifactId>google-auth-library-oauth2-http</artifactId>
+  			<version>${google-auth-library-oauth2-http-version}</version>
+		</dependency>
+
+		<dependency>
+		    <groupId>com.google.api-client</groupId>
+		    <artifactId>google-api-client</artifactId>
+		    <version>${google-api-client-version}</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>com.google.apis</groupId>
+		    <artifactId>google-api-services-drive</artifactId>
+		    <version>${google-api-services-drive-version}</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>org.apache.tika</groupId>
+		    <artifactId>tika-core</artifactId>
+		    <version>${tika-core-version}</version>
+		</dependency>
+	</dependencies>
+
+	 <build>
+     	<plugins>
+     		<plugin>
+            	<groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                   	<release>${java.version}</release>
+                    <parameters>true</parameters>
+                </configuration>
+            </plugin>
+            
+     	    <plugin>
+	        	<groupId>org.apache.maven.plugins</groupId>
+		        <artifactId>maven-surefire-plugin</artifactId>
+		        <configuration>
+		            <trimStackTrace>false</trimStackTrace>
+		        </configuration>
+		    </plugin>
+		    
+		    <plugin>
+	        	<groupId>org.apache.maven.plugins</groupId>
+		        <artifactId>maven-eclipse-plugin</artifactId>
+		        <version>${maven-eclipse-plugin-version}</version>
+		        <configuration>
+		            <downloadSources>true</downloadSources>
+		            <downloadJavadocs>true</downloadJavadocs>
+		        </configuration>
+		    </plugin>
+        </plugins>
+	</build>
+
+</project>
