@@ -13,7 +13,7 @@ public final class DriveApiConstants {
 		}
 		
 		public static final String CLIENT_SECRET = "/client_secret.json";
-		public static final String APPLICATION_NAME = "BirdexApi";
+		public static final String APPLICATION_NAME_PROP = "google.api.app_name";
 		public static final String FOLDER_MIME_TYPE = "application/vnd.google-apps.folder";
 		public static final String ID_FIELD_BASE = "id";
 		public static final String FILE_FIELDS = "id, name, parents, createdTime";

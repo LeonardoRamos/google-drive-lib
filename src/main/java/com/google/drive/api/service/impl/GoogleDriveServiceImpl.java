@@ -98,7 +98,7 @@ public class GoogleDriveServiceImpl implements GoogleDriveService {
 				
 				this.driveService = new Drive.Builder(GoogleNetHttpTransport.newTrustedTransport(), 
 						GsonFactory.getDefaultInstance(), new HttpCredentialsAdapter(this.getCredentials()))
-				        .setApplicationName(GOOGLEAPI.APPLICATION_NAME)
+				        .setApplicationName(this.getApplicationName())
 				        .build();
 			}
 			
@@ -106,7 +106,7 @@ public class GoogleDriveServiceImpl implements GoogleDriveService {
 			throw new GoogleApiSecurityException(MSGERROR.GOOGLE_OAUTH2_ERROR, e);
 		} 
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
