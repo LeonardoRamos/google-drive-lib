@@ -257,7 +257,7 @@ class GoogleDriveServiceImplTest {
 		
 		Mockito.when(this.driveService.files()).thenReturn(this.files);
 		Mockito.when(this.files.list()).thenReturn(this.list);
-		Mockito.when(this.list.setQ(String.format(GOOGLEAPI.FILES_QUERY_IN_FOLDER_FILENAME_CONTAINS, childFolderId, fileNameFlter))).thenReturn(this.list);
+		Mockito.when(this.list.setQ(String.format(GOOGLEAPI.FILES_QUERY_IN_FOLDER_FILENAME_FILTER, childFolderId, fileNameFlter))).thenReturn(this.list);
 		Mockito.when(this.list.setSpaces(GOOGLEAPI.DRIVE_SPACES)).thenReturn(this.list);
 		Mockito.when(this.list.setFields(GOOGLEAPI.FOLDER_QUERY_FIELDS)).thenReturn(this.list);
 		Mockito.when(this.list.setPageSize(pageSize)).thenReturn(this.list);
@@ -296,7 +296,7 @@ class GoogleDriveServiceImplTest {
 		
 		Mockito.when(this.driveService.files()).thenReturn(this.files);
 		Mockito.when(this.files.list()).thenReturn(this.list);
-		Mockito.when(this.list.setQ(String.format(GOOGLEAPI.FILES_QUERY_IN_FOLDER_FILENAME_CONTAINS, childFolderId, fileNameFlter))).thenReturn(this.list);
+		Mockito.when(this.list.setQ(String.format(GOOGLEAPI.FILES_QUERY_IN_FOLDER_FILENAME_FILTER, childFolderId, fileNameFlter))).thenReturn(this.list);
 		Mockito.when(this.list.setSpaces(GOOGLEAPI.DRIVE_SPACES)).thenReturn(this.list);
 		Mockito.when(this.list.setFields(GOOGLEAPI.FOLDER_QUERY_FIELDS)).thenReturn(this.list);
 		Mockito.when(this.list.setPageSize(pageSize)).thenReturn(this.list);

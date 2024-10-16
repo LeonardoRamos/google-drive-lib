@@ -263,7 +263,7 @@ public class GoogleDriveServiceImpl implements GoogleDriveService {
 			String folderId = this.getFolderIdByName(folderHierarchy);
 
 			FileList result = this.driveService.files().list()
-				      .setQ(String.format(GOOGLEAPI.FILES_QUERY_IN_FOLDER_FILENAME_CONTAINS, folderId, fileNameFilter))
+				      .setQ(String.format(GOOGLEAPI.FILES_QUERY_IN_FOLDER_FILENAME_FILTER, folderId, fileNameFilter))
 				      .setSpaces(GOOGLEAPI.DRIVE_SPACES)
 				      .setFields(GOOGLEAPI.FOLDER_QUERY_FIELDS)
 				      .setPageSize(pageSize)

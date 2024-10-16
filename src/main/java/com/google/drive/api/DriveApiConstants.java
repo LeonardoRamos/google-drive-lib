@@ -19,7 +19,7 @@ public final class DriveApiConstants {
 		public static final String FILE_FIELDS = "id, name, parents, createdTime";
 		public static final String FILE_QUERY_IN_FOLDER = "mimeType!='application/vnd.google-apps.folder' and name='%s' and '%s' in parents";
 		public static final String FILES_QUERY_IN_FOLDER = "mimeType!='application/vnd.google-apps.folder' and '%s' in parents";
-		public static final String FILES_QUERY_IN_FOLDER_FILENAME_CONTAINS = "mimeType!='application/vnd.google-apps.folder' and '%s' in parents and name contains '%s'";
+		public static final String FILES_QUERY_IN_FOLDER_FILENAME_FILTER = "mimeType!='application/vnd.google-apps.folder' and '%s' in parents and name contains '%s'";
 		public static final String FOLDER_QUERY_NAME = "mimeType='application/vnd.google-apps.folder' and name='%s'";
 		public static final String FOLDER_QUERY_PARENT = " and '%s' in parents";
 		public static final String DRIVE_SPACES = "drive";
