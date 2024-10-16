@@ -176,5 +176,45 @@ public interface GoogleDriveService extends GoogleService {
 	 * @throws GoogleApiGeneralErrorException
 	 */
 	DriveFileList doGetFolderFiles(LinkedList<String> folderStructure, Integer pageSize, String pageToken) throws GoogleApiGeneralErrorException;
+
+	/**
+	 * Refresh credentials before listing files of a given folder tree by fileName filter.
+	 * 
+	 * @param folderStructure
+	 * @param fileNameFilter
+	 * @return {@link DriveFileList}
+	 * @throws GoogleApiGeneralErrorException
+	 */
+	default DriveFileList getFolderFilesByFileNameFilter(LinkedList<String> folderStructure, String fileNameFilter) throws GoogleApiGeneralErrorException {
+		this.refreshCredentials();
+		return this.getFolderFilesByFileNameFilter(folderStructure, fileNameFilter, GOOGLEAPI.DEFAULT_PAGE_SIZE, null);
+	}
+	
+	/**
+	 * Refresh credentials before listing files of a given folder tree by fileName filter.
+	 * 
+	 * @param folderStructure
+	 * @param fileNameFilter
+	 * @param pageSize
+	 * @param pageToken
+	 * @return {@link DriveFileList}
+	 * @throws GoogleApiGeneralErrorException
+	 */
+	default DriveFileList getFolderFilesByFileNameFilter(LinkedList<String> folderStructure, String fileNameFilter, Integer pageSize, String pageToken) throws GoogleApiGeneralErrorException {
+		this.refreshCredentials();
+		return this.getFolderFilesByFileNameFilter(folderStructure, fileNameFilter, pageSize <= GOOGLEAPI.MAX_PAGE_SIZE ? pageSize : GOOGLEAPI.MAX_PAGE_SIZE, pageToken);
+	}
+	
+	/**
+	 * List files of a given folder tree by fileName filter.
+	 * 
+	 * @param folderHierarchy
+	 * @param fileNameFilter
+	 * @param pageSize
+	 * @param pageToken
+	 * @return {@link DriveFileList}
+	 * @throws GoogleApiGeneralErrorException
+	 */
+	DriveFileList doGetFolderFilesByFileNameFilter(LinkedList<String> folderHierarchy, String fileNameFilter, Integer pageSize, String pageToken) throws GoogleApiGeneralErrorException;
 	
 }

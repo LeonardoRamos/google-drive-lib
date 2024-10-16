@@ -253,6 +253,43 @@ public class GoogleDriveServiceImpl implements GoogleDriveService {
 	}
 	
 	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public DriveFileList doGetFolderFilesByFileNameFilter(LinkedList<String> folderHierarchy, String fileNameFilter, Integer pageSize, String pageToken) throws GoogleApiGeneralErrorException {
+		List<DriveFile> driveFiles = new ArrayList<>();
+		
+		try {
+			String folderId = this.getFolderIdByName(folderHierarchy);
+
+			FileList result = this.driveService.files().list()
+				      .setQ(String.format(GOOGLEAPI.FILES_QUERY_IN_FOLDER_FILENAME_CONTAINS, folderId, fileNameFilter))
+				      .setSpaces(GOOGLEAPI.DRIVE_SPACES)
+				      .setFields(GOOGLEAPI.FOLDER_QUERY_FIELDS)
+				      .setPageSize(pageSize)
+				      .setPageToken(pageToken)
+				      .execute();
+			
+			if (!this.isEmptyResult(result)) {
+				
+				pageToken = result.getNextPageToken();
+				
+				result.getFiles().forEach(file -> {
+					driveFiles.add(this.buildDriveFile(file));
+				});
+			}
+			
+		} catch (Exception e) {
+			throw new GoogleApiGeneralErrorException(MSGERROR.DRIVE_GENERAL_ERROR, e);
+		}
+
+		return DriveFileList.builder()
+				.driveFiles(driveFiles)
+				.pageToken(pageToken)
+				.build();
+	}
+	
+	/**
 	 * Build an instance of {@link DriveFile} for given Google Drive file data.
 	 * 
 	 * @param file
