@@ -13,12 +13,13 @@ public final class DriveApiConstants {
 		}
 		
 		public static final String CLIENT_SECRET = "/client_secret.json";
-		public static final String APPLICATION_NAME = "BirdexApi";
+		public static final String APPLICATION_NAME_PROP = "google.api.app_name";
 		public static final String FOLDER_MIME_TYPE = "application/vnd.google-apps.folder";
 		public static final String ID_FIELD_BASE = "id";
 		public static final String FILE_FIELDS = "id, name, parents, createdTime";
 		public static final String FILE_QUERY_IN_FOLDER = "mimeType!='application/vnd.google-apps.folder' and name='%s' and '%s' in parents";
 		public static final String FILES_QUERY_IN_FOLDER = "mimeType!='application/vnd.google-apps.folder' and '%s' in parents";
+		public static final String FILES_QUERY_IN_FOLDER_FILENAME_FILTER = "mimeType!='application/vnd.google-apps.folder' and '%s' in parents and name contains '%s'";
 		public static final String FOLDER_QUERY_NAME = "mimeType='application/vnd.google-apps.folder' and name='%s'";
 		public static final String FOLDER_QUERY_PARENT = " and '%s' in parents";
 		public static final String DRIVE_SPACES = "drive";

@@ -5,8 +5,11 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.springframework.core.env.Environment;
+
 import com.google.auth.oauth2.AccessToken;
 import com.google.auth.oauth2.GoogleCredentials;
+import com.google.drive.api.ApplicationContexts;
 import com.google.drive.api.DriveApiConstants.GOOGLEAPI;
 import com.google.drive.api.DriveApiConstants.MSGERROR;
 import com.google.drive.api.exception.GoogleApiSecurityException;
@@ -117,6 +120,21 @@ public interface GoogleService {
 	default boolean isCredentialInitialized() {
 		return this.getCredentials() != null && this.getCredentials().getAccessToken() != null && 
 				this.getCredentials().getAccessToken().getExpirationTime() != null;
+	}
+	
+	/**
+	 * Return application name from properties variables.
+	 * 
+	 * @return application name
+	 */
+	default String getApplicationName() {
+		Environment env = ApplicationContexts.getBean(Environment.class);
+		
+		if (env != null) {
+			return env.getProperty(GOOGLEAPI.APPLICATION_NAME_PROP);
+		}
+		
+		return null;
 	}
 
 }

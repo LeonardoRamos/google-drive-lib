@@ -98,7 +98,7 @@ public class GoogleDriveServiceImpl implements GoogleDriveService {
 				
 				this.driveService = new Drive.Builder(GoogleNetHttpTransport.newTrustedTransport(), 
 						GsonFactory.getDefaultInstance(), new HttpCredentialsAdapter(this.getCredentials()))
-				        .setApplicationName(GOOGLEAPI.APPLICATION_NAME)
+				        .setApplicationName(this.getApplicationName())
 				        .build();
 			}
 			
@@ -106,7 +106,7 @@ public class GoogleDriveServiceImpl implements GoogleDriveService {
 			throw new GoogleApiSecurityException(MSGERROR.GOOGLE_OAUTH2_ERROR, e);
 		} 
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -227,6 +227,43 @@ public class GoogleDriveServiceImpl implements GoogleDriveService {
 
 			FileList result = this.driveService.files().list()
 				      .setQ(String.format(GOOGLEAPI.FILES_QUERY_IN_FOLDER, folderId))
+				      .setSpaces(GOOGLEAPI.DRIVE_SPACES)
+				      .setFields(GOOGLEAPI.FOLDER_QUERY_FIELDS)
+				      .setPageSize(pageSize)
+				      .setPageToken(pageToken)
+				      .execute();
+			
+			if (!this.isEmptyResult(result)) {
+				
+				pageToken = result.getNextPageToken();
+				
+				result.getFiles().forEach(file -> {
+					driveFiles.add(this.buildDriveFile(file));
+				});
+			}
+			
+		} catch (Exception e) {
+			throw new GoogleApiGeneralErrorException(MSGERROR.DRIVE_GENERAL_ERROR, e);
+		}
+
+		return DriveFileList.builder()
+				.driveFiles(driveFiles)
+				.pageToken(pageToken)
+				.build();
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public DriveFileList doGetFolderFilesByFileNameFilter(LinkedList<String> folderHierarchy, String fileNameFilter, Integer pageSize, String pageToken) throws GoogleApiGeneralErrorException {
+		List<DriveFile> driveFiles = new ArrayList<>();
+		
+		try {
+			String folderId = this.getFolderIdByName(folderHierarchy);
+
+			FileList result = this.driveService.files().list()
+				      .setQ(String.format(GOOGLEAPI.FILES_QUERY_IN_FOLDER_FILENAME_FILTER, folderId, fileNameFilter))
 				      .setSpaces(GOOGLEAPI.DRIVE_SPACES)
 				      .setFields(GOOGLEAPI.FOLDER_QUERY_FIELDS)
 				      .setPageSize(pageSize)

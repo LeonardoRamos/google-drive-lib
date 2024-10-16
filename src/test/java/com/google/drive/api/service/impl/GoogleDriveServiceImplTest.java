@@ -231,6 +231,86 @@ class GoogleDriveServiceImplTest {
 	}
 	
 	@Test
+	void doGetFolderFilesByFileNameFilter_whenSuccess() throws IOException {
+		Integer pageSize = 10;
+		
+		String fileName = "fileTest";
+		String fileId = "fileTestId";
+		String fileNameFlter = "Test";
+		String resultNextPageToken = "nextPageToken";
+		
+		String parentFolderName = "parentFolder";
+		String parentFolderId = "parentFolderId";
+		String childFolderName = "childFolder";
+		String childFolderId = "childFolderId";
+		
+		LinkedList<String> folderHierarchy = this.mockFolderData(parentFolderName, parentFolderId, childFolderName, childFolderId);
+		
+		File expectedFile = new File();
+		expectedFile.setId(fileId);
+		expectedFile.setName(fileName);
+		expectedFile.setCreatedTime(new DateTime(Calendar.getInstance().getTimeInMillis()));
+		
+		FileList expectedResult = new FileList();
+		expectedResult.setFiles(Arrays.asList(expectedFile));
+		expectedResult.setNextPageToken(resultNextPageToken);
+		
+		Mockito.when(this.driveService.files()).thenReturn(this.files);
+		Mockito.when(this.files.list()).thenReturn(this.list);
+		Mockito.when(this.list.setQ(String.format(GOOGLEAPI.FILES_QUERY_IN_FOLDER_FILENAME_FILTER, childFolderId, fileNameFlter))).thenReturn(this.list);
+		Mockito.when(this.list.setSpaces(GOOGLEAPI.DRIVE_SPACES)).thenReturn(this.list);
+		Mockito.when(this.list.setFields(GOOGLEAPI.FOLDER_QUERY_FIELDS)).thenReturn(this.list);
+		Mockito.when(this.list.setPageSize(pageSize)).thenReturn(this.list);
+		Mockito.when(this.list.setPageToken(null)).thenReturn(this.list);
+		Mockito.when(this.list.execute()).thenReturn(expectedResult);
+		
+		DriveFileList result = this.googleDriveService.doGetFolderFilesByFileNameFilter(folderHierarchy, fileNameFlter, pageSize, null);
+		
+		Assertions.assertNotNull(result);
+		Assertions.assertTrue(!result.getDriveFiles().isEmpty());
+		Assertions.assertEquals(result.getPageToken(), resultNextPageToken);
+		Assertions.assertEquals(result.getDriveFiles().getFirst().getFileId(), fileId);
+		Assertions.assertEquals(result.getDriveFiles().getFirst().getFileName(), fileName);
+		Assertions.assertEquals(result.getDriveFiles().getFirst().getUrlExport(), GOOGLEAPI.DRIVE_BASE_EXPORT_URL + fileId);
+	}
+	
+	@Test
+	void doGetFolderFilesByFileNameFilter_whenEmptyResults() throws IOException {
+		Integer pageSize = 10;
+		
+		String fileName = "fileTest";
+		String fileId = "fileTestId";
+		String fileNameFlter = "Test";
+		
+		String parentFolderName = "parentFolder";
+		String parentFolderId = "parentFolderId";
+		String childFolderName = "childFolder";
+		String childFolderId = "childFolderId";
+		
+		LinkedList<String> folderHierarchy = this.mockFolderData(parentFolderName, parentFolderId, childFolderName, childFolderId);
+		
+		File expectedFile = new File();
+		expectedFile.setId(fileId);
+		expectedFile.setName(fileName);
+		expectedFile.setCreatedTime(new DateTime(Calendar.getInstance().getTimeInMillis()));
+		
+		Mockito.when(this.driveService.files()).thenReturn(this.files);
+		Mockito.when(this.files.list()).thenReturn(this.list);
+		Mockito.when(this.list.setQ(String.format(GOOGLEAPI.FILES_QUERY_IN_FOLDER_FILENAME_FILTER, childFolderId, fileNameFlter))).thenReturn(this.list);
+		Mockito.when(this.list.setSpaces(GOOGLEAPI.DRIVE_SPACES)).thenReturn(this.list);
+		Mockito.when(this.list.setFields(GOOGLEAPI.FOLDER_QUERY_FIELDS)).thenReturn(this.list);
+		Mockito.when(this.list.setPageSize(pageSize)).thenReturn(this.list);
+		Mockito.when(this.list.setPageToken(null)).thenReturn(this.list);
+		Mockito.when(this.list.execute()).thenReturn(null);
+		
+		DriveFileList result = this.googleDriveService.doGetFolderFilesByFileNameFilter(folderHierarchy, fileNameFlter, pageSize, null);
+		
+		Assertions.assertNotNull(result);
+		Assertions.assertTrue(result.getDriveFiles().isEmpty());
+		Assertions.assertNull(result.getPageToken());
+	}
+	
+	@Test
 	void doUploadFileToFolder_whenSuccessPublicPermission() throws IOException {
 		String fileName = "fileTest";
 		String fileId = "fileTestId";
