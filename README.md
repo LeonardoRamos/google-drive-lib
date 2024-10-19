@@ -38,7 +38,8 @@ Inject and instantiate the GoogleDriveServiceImpl in your Service layer.
 @Service
 public class MyService {
 
-    private GoogleDriveServiceImpl googleDriveService = new GoogleDriveServiceImpl();
+    @Autowired
+    private GoogleDriveServiceImpl googleDriveService;
 
 .
 .
