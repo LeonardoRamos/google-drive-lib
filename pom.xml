@@ -5,7 +5,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
 	<name>google-drive-lib</name>
-	<version>1.0.0</version>
+	<version>1.1.0</version>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.google.drive.api</groupId>
 	<artifactId>google-drive-lib</artifactId>

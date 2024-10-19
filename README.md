@@ -14,7 +14,13 @@ Import the dependency in your project.
 ```
 
 - #### Google Client Credentials
-Add your Google Secret Client Credentials in resources folder with given name: `client_secret.json`.
+Copy your Google Secret Client Credentials into your project's resources folder with given name: `client_secret.json`.
+
+Add the following property for the app's name Credential:
+
+```properties 
+google.api.app_name=myApp
+```
 
 
 - #### Service layer
