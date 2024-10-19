@@ -13,11 +13,11 @@ Import the dependency in your project.
 </dependency>
 
 <dependency>
-	<groupId>com.google.drive.api</groupId>
-	<artifactId>google-drive-lib</artifactId>
-	<version>1.1.0</version>
-	<type>test-jar</type>
-  	<scope>test</scope>
+   <groupId>com.google.drive.api</groupId>
+   <artifactId>google-drive-lib</artifactId>
+   <version>1.1.0</version>
+   <type>test-jar</type>
+   <scope>test</scope>
 </dependency>
 ```
 
