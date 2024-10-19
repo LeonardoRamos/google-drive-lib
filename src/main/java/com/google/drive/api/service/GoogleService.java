@@ -1,16 +1,11 @@
 package com.google.drive.api.service;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 
-import org.springframework.core.env.Environment;
-
 import com.google.auth.oauth2.AccessToken;
 import com.google.auth.oauth2.GoogleCredentials;
-import com.google.drive.api.ApplicationContexts;
-import com.google.drive.api.DriveApiConstants.GOOGLEAPI;
 import com.google.drive.api.DriveApiConstants.MSGERROR;
 import com.google.drive.api.exception.GoogleApiSecurityException;
 
@@ -23,43 +18,11 @@ import com.google.drive.api.exception.GoogleApiSecurityException;
 public interface GoogleService {
 	
 	/**
-	 * Initialize the Google service.
-	 * 
-	 * @throws GoogleApiSecurityException
-	 */
-	void initializeService() throws GoogleApiSecurityException;
-	
-	/**
-	 * Set the Google credentials.
-	 * 
-	 * @param credentials
-	 */
-	void setCredentials(GoogleCredentials credentials);
-
-	/**
 	 * Return the credentials.
 	 * 
 	 * @return {@link GoogleCredentials}
 	 */
 	GoogleCredentials getCredentials();
-	
-	/**
-	 * Intitalize the credentials through json client secrets.
-	 * 
-	 * @throws GoogleApiSecurityException
-	 */
-	default void initializeCredentials() throws GoogleApiSecurityException {
-		try {
-			GoogleCredentials googleCredentials = GoogleCredentials.fromStream(new FileInputStream(GOOGLEAPI.CLIENT_SECRET));
-			googleCredentials.refreshIfExpired();
-			
-			this.setCredentials(googleCredentials);
-			this.getCredentials().refreshAccessToken();
-	
-		} catch (IOException e) {
-			throw new GoogleApiSecurityException(MSGERROR.GOOGLE_OAUTH2_ERROR, e);
-		}
-	}
 	
 	/**
 	 * Refresh access credentials for Google service.
@@ -78,10 +41,6 @@ public interface GoogleService {
 	 */
 	default AccessToken getRefreshedAccessToken() throws GoogleApiSecurityException  {
 		try {	
-			if (!this.isCredentialInitialized()) {
-				this.initializeCredentials();
-			}
-			
 			this.getCredentials().refreshIfExpired();
 			
 			if (this.isAccessTokenExpired()) {
@@ -102,39 +61,10 @@ public interface GoogleService {
 	 * @throws GoogleApiSecurityException
 	 */
 	default boolean isAccessTokenExpired() throws GoogleApiSecurityException {
-		if (!this.isCredentialInitialized()) {
-			return true;
-		}
-		
 		Date now = Calendar.getInstance().getTime();
 		Date expiration = this.getCredentials().getAccessToken().getExpirationTime();
 		
 		return expiration == null || expiration.after(now);
-	}
-
-	/**
-	 * Verify if the Google credentials have been initialized.
-	 * 
-	 * @return true if the Google credentials have been initialized, false otherwise
-	 */
-	default boolean isCredentialInitialized() {
-		return this.getCredentials() != null && this.getCredentials().getAccessToken() != null && 
-				this.getCredentials().getAccessToken().getExpirationTime() != null;
-	}
-	
-	/**
-	 * Return application name from properties variables.
-	 * 
-	 * @return application name
-	 */
-	default String getApplicationName() {
-		Environment env = ApplicationContexts.getBean(Environment.class);
-		
-		if (env != null) {
-			return env.getProperty(GOOGLEAPI.APPLICATION_NAME_PROP);
-		}
-		
-		return null;
 	}
 
 }

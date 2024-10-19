@@ -1,6 +1,6 @@
 package com.google.drive.api.service;
 
-import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
 
 import com.google.api.services.drive.model.File;
@@ -45,7 +45,7 @@ public interface GoogleDriveService extends GoogleService {
 	 * @return {@link Optional<DriveFile>} file retrieved
 	 * @throws GoogleApiGeneralErrorException
 	 */
-	default Optional<DriveFile> getFileByNameAndParentFolder(LinkedList<String> folderHierarchy, String fileName) throws GoogleApiGeneralErrorException {
+	default Optional<DriveFile> getFileByNameAndParentFolder(List<String> folderHierarchy, String fileName) throws GoogleApiGeneralErrorException {
 		this.refreshCredentials();
 		return this.doGetFileByNameAndParentFolder(folderHierarchy, fileName);
 	}
@@ -58,7 +58,7 @@ public interface GoogleDriveService extends GoogleService {
 	 * @return {@link Optional<DriveFile>} file retrieved
 	 * @throws GoogleApiGeneralErrorException
 	 */
-	Optional<DriveFile> doGetFileByNameAndParentFolder(LinkedList<String> folderHierarchy, String fileName) throws GoogleApiGeneralErrorException;
+	Optional<DriveFile> doGetFileByNameAndParentFolder(List<String> folderHierarchy, String fileName) throws GoogleApiGeneralErrorException;
 
 	/**
 	 * Refresh credentials before downloading file bytes for given fileId.
@@ -89,7 +89,7 @@ public interface GoogleDriveService extends GoogleService {
 	 * @return {@link DriveFile}
 	 * @throws GoogleApiException
 	 */
-	default DriveFile uploadFileToFolder(LinkedList<String> folderHierarchy, java.io.File file) throws GoogleApiException {
+	default DriveFile uploadFileToFolder(List<String> folderHierarchy, java.io.File file) throws GoogleApiException {
 		this.refreshCredentials();
 		return this.doUploadFileToFolder(folderHierarchy, file, false);
 	}
@@ -104,7 +104,7 @@ public interface GoogleDriveService extends GoogleService {
 	 * @return {@link DriveFile}
 	 * @throws GoogleApiException
 	 */
-	default DriveFile uploadFileToFolder(LinkedList<String> folderHierarchy, java.io.File file, boolean isPublic) throws GoogleApiException {
+	default DriveFile uploadFileToFolder(List<String> folderHierarchy, java.io.File file, boolean isPublic) throws GoogleApiException {
 		this.refreshCredentials();
 		return this.doUploadFileToFolder(folderHierarchy, file, isPublic);
 	}
@@ -118,7 +118,7 @@ public interface GoogleDriveService extends GoogleService {
 	 * @return {@link DriveFile}
 	 * @throws GoogleApiGeneralErrorException
 	 */
-	DriveFile doUploadFileToFolder(LinkedList<String> folderHierarchy, java.io.File file, boolean isPublic) throws GoogleApiGeneralErrorException;
+	DriveFile doUploadFileToFolder(List<String> folderHierarchy, java.io.File file, boolean isPublic) throws GoogleApiGeneralErrorException;
 	
 	/**
 	 * Refresh credentials before updating permission for a Google Drive file to public.
@@ -146,7 +146,7 @@ public interface GoogleDriveService extends GoogleService {
 	 * @return {@link DriveFileList}
 	 * @throws GoogleApiGeneralErrorException
 	 */
-	default DriveFileList getFolderFiles(LinkedList<String> folderStructure) throws GoogleApiGeneralErrorException {
+	default DriveFileList getFolderFiles(List<String> folderStructure) throws GoogleApiGeneralErrorException {
 		this.refreshCredentials();
 		return this.doGetFolderFiles(folderStructure, GOOGLEAPI.DEFAULT_PAGE_SIZE, null);
 	}
@@ -161,7 +161,7 @@ public interface GoogleDriveService extends GoogleService {
 	 * @return {@link DriveFileList}
 	 * @throws GoogleApiGeneralErrorException
 	 */
-	default DriveFileList getFolderFiles(LinkedList<String> folderStructure, Integer pageSize, String pageToken) throws GoogleApiGeneralErrorException {
+	default DriveFileList getFolderFiles(List<String> folderStructure, Integer pageSize, String pageToken) throws GoogleApiGeneralErrorException {
 		this.refreshCredentials();
 		return this.doGetFolderFiles(folderStructure, pageSize <= GOOGLEAPI.MAX_PAGE_SIZE ? pageSize : GOOGLEAPI.MAX_PAGE_SIZE, pageToken);
 	}
@@ -175,7 +175,7 @@ public interface GoogleDriveService extends GoogleService {
 	 * @return {@link DriveFileList}
 	 * @throws GoogleApiGeneralErrorException
 	 */
-	DriveFileList doGetFolderFiles(LinkedList<String> folderStructure, Integer pageSize, String pageToken) throws GoogleApiGeneralErrorException;
+	DriveFileList doGetFolderFiles(List<String> folderStructure, Integer pageSize, String pageToken) throws GoogleApiGeneralErrorException;
 
 	/**
 	 * Refresh credentials before listing files of a given folder tree by fileName filter.
@@ -185,7 +185,7 @@ public interface GoogleDriveService extends GoogleService {
 	 * @return {@link DriveFileList}
 	 * @throws GoogleApiGeneralErrorException
 	 */
-	default DriveFileList getFolderFilesByFileNameFilter(LinkedList<String> folderStructure, String fileNameFilter) throws GoogleApiGeneralErrorException {
+	default DriveFileList getFolderFilesByFileNameFilter(List<String> folderStructure, String fileNameFilter) throws GoogleApiGeneralErrorException {
 		this.refreshCredentials();
 		return this.getFolderFilesByFileNameFilter(folderStructure, fileNameFilter, GOOGLEAPI.DEFAULT_PAGE_SIZE, null);
 	}
@@ -200,7 +200,7 @@ public interface GoogleDriveService extends GoogleService {
 	 * @return {@link DriveFileList}
 	 * @throws GoogleApiGeneralErrorException
 	 */
-	default DriveFileList getFolderFilesByFileNameFilter(LinkedList<String> folderStructure, String fileNameFilter, Integer pageSize, String pageToken) throws GoogleApiGeneralErrorException {
+	default DriveFileList getFolderFilesByFileNameFilter(List<String> folderStructure, String fileNameFilter, Integer pageSize, String pageToken) throws GoogleApiGeneralErrorException {
 		this.refreshCredentials();
 		return this.getFolderFilesByFileNameFilter(folderStructure, fileNameFilter, pageSize <= GOOGLEAPI.MAX_PAGE_SIZE ? pageSize : GOOGLEAPI.MAX_PAGE_SIZE, pageToken);
 	}
@@ -215,6 +215,6 @@ public interface GoogleDriveService extends GoogleService {
 	 * @return {@link DriveFileList}
 	 * @throws GoogleApiGeneralErrorException
 	 */
-	DriveFileList doGetFolderFilesByFileNameFilter(LinkedList<String> folderHierarchy, String fileNameFilter, Integer pageSize, String pageToken) throws GoogleApiGeneralErrorException;
+	DriveFileList doGetFolderFilesByFileNameFilter(List<String> folderHierarchy, String fileNameFilter, Integer pageSize, String pageToken) throws GoogleApiGeneralErrorException;
 	
 }

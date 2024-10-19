@@ -2,24 +2,21 @@ package com.google.drive.api.service.impl;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
 import org.apache.tika.Tika;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.FileContent;
-import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.FileList;
 import com.google.api.services.drive.model.Permission;
-import com.google.auth.http.HttpCredentialsAdapter;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.drive.api.DriveApiConstants.GOOGLEAPI;
 import com.google.drive.api.DriveApiConstants.MSGERROR;
@@ -27,7 +24,6 @@ import com.google.drive.api.domain.DriveFile;
 import com.google.drive.api.domain.DriveFileList;
 import com.google.drive.api.exception.GoogleApiException;
 import com.google.drive.api.exception.GoogleApiGeneralErrorException;
-import com.google.drive.api.exception.GoogleApiSecurityException;
 import com.google.drive.api.service.GoogleDriveService;
 
 /**
@@ -37,74 +33,21 @@ import com.google.drive.api.service.GoogleDriveService;
  * @author leonardo.ramos
  *
  */
+@Service
 public class GoogleDriveServiceImpl implements GoogleDriveService {
 	
+	@Autowired
 	private GoogleCredentials credentials;
+	
+	@Autowired
 	private Drive driveService;
 	
-	/**
-	 * Default constructor.
-	 * 
-	 * @throws GeneralSecurityException
-	 */
-	public GoogleDriveServiceImpl() throws GeneralSecurityException {
-		this.initializeService();
-	}
-	
-	/**
-	 * Constructor of a new instance of {@link GoogleDriveServiceImpl}. In case of a valid non null instance of {@link Drive} 
-	 * and {@link GoogleCredentials}, it's expected that the credentials are already initialized on  the outside context in 
-	 * which this class was constructed and used.
-	 * 
-	 * @param driveService
-	 * @param credentials
-	 * @throws GoogleApiSecurityException
-	 */
-	protected GoogleDriveServiceImpl(Drive driveService, GoogleCredentials credentials) throws GoogleApiSecurityException {
-		if (driveService != null && credentials != null) {
-			this.driveService = driveService;
-			this.setCredentials(credentials);
-
-		} else {
-			this.initializeService();
-		}
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void setCredentials(GoogleCredentials credentials) {
-		this.credentials = credentials;
-	}
-
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public GoogleCredentials getCredentials() {
 		return this.credentials;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void initializeService() throws GoogleApiSecurityException {
-		try {
-			if (this.driveService == null) {
-
-				this.initializeCredentials();
-				
-				this.driveService = new Drive.Builder(GoogleNetHttpTransport.newTrustedTransport(), 
-						GsonFactory.getDefaultInstance(), new HttpCredentialsAdapter(this.getCredentials()))
-				        .setApplicationName(this.getApplicationName())
-				        .build();
-			}
-			
-		} catch (GeneralSecurityException | IOException e) {
-			throw new GoogleApiSecurityException(MSGERROR.GOOGLE_OAUTH2_ERROR, e);
-		} 
 	}
 
 	/**
@@ -124,7 +67,7 @@ public class GoogleDriveServiceImpl implements GoogleDriveService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Optional<DriveFile> doGetFileByNameAndParentFolder(LinkedList<String> folderHierarchy, String fileName) throws GoogleApiGeneralErrorException {
+	public Optional<DriveFile> doGetFileByNameAndParentFolder(List<String> folderHierarchy, String fileName) throws GoogleApiGeneralErrorException {
 		try {
 			String folderId = this.getFolderIdByName(folderHierarchy);
 			
@@ -167,7 +110,7 @@ public class GoogleDriveServiceImpl implements GoogleDriveService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public DriveFile doUploadFileToFolder(LinkedList<String> folderHierarchy, java.io.File file, boolean isPublic) throws GoogleApiGeneralErrorException {
+	public DriveFile doUploadFileToFolder(List<String> folderHierarchy, java.io.File file, boolean isPublic) throws GoogleApiGeneralErrorException {
 		try {
 			String folderId = this.getFolderIdByName(folderHierarchy);
 			
@@ -219,7 +162,7 @@ public class GoogleDriveServiceImpl implements GoogleDriveService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public DriveFileList doGetFolderFiles(LinkedList<String> folderHierarchy, Integer pageSize, String pageToken) throws GoogleApiGeneralErrorException {
+	public DriveFileList doGetFolderFiles(List<String> folderHierarchy, Integer pageSize, String pageToken) throws GoogleApiGeneralErrorException {
 		List<DriveFile> driveFiles = new ArrayList<>();
 		
 		try {
@@ -256,7 +199,7 @@ public class GoogleDriveServiceImpl implements GoogleDriveService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public DriveFileList doGetFolderFilesByFileNameFilter(LinkedList<String> folderHierarchy, String fileNameFilter, Integer pageSize, String pageToken) throws GoogleApiGeneralErrorException {
+	public DriveFileList doGetFolderFilesByFileNameFilter(List<String> folderHierarchy, String fileNameFilter, Integer pageSize, String pageToken) throws GoogleApiGeneralErrorException {
 		List<DriveFile> driveFiles = new ArrayList<>();
 		
 		try {
@@ -314,7 +257,7 @@ public class GoogleDriveServiceImpl implements GoogleDriveService {
 	 * @return folder id
 	 * @throws IOException
 	 */
-	private String getFolderIdByName(LinkedList<String> folderHierarchy) throws IOException {
+	private String getFolderIdByName(List<String> folderHierarchy) throws IOException {
 		String parentFolderId = null;
 		
 		for (String folderName : folderHierarchy) {

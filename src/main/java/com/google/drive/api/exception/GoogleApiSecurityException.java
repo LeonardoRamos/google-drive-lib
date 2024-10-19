@@ -14,8 +14,12 @@ public class GoogleApiSecurityException extends GoogleApiException {
 	 * Constructor
 	 * 
 	 * @param message
-	 * @param data
+	 * @param cause
 	 */
+	public GoogleApiSecurityException(String message, Exception cause) {
+        super(message, cause);
+    }
+	
 	/**
 	 * Constructor
 	 * 
