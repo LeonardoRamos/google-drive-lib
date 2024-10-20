@@ -1,1 +1,2 @@
 com.google.drive.api.config.GoogleServiceAutoConfig
+com.google.drive.api.service.impl.GoogleDriveServiceImpl
