@@ -23,6 +23,8 @@ import com.google.drive.api.DriveApiConstants.MSGERROR;
 import com.google.drive.api.exception.GoogleApiSecurityException;
 import com.google.drive.api.service.GoogleService;
 
+import io.micrometer.common.util.StringUtils;
+
 /**
  * Configuration class to manage Google service {@code Spring} {@code beans}.
  * 
@@ -39,12 +41,12 @@ public class GoogleServiceAutoConfig {
 	 */
 	@Bean
 	@ConditionalOnMissingBean
-	public GoogleCredentials credentials() throws GoogleApiSecurityException {
+	public GoogleCredentials credentials(@Value(DriveApiConstants.GOOGLEAPI.CREDENTIALS_PATH) String credentialsPath) throws GoogleApiSecurityException {
 		try {
 			
-			URL credentialsResource = GoogleService.class.getResource(GOOGLEAPI.CLIENT_SECRET);
+			File credentials = this.getCredentialsFile(credentialsPath);
 			
-			GoogleCredentials googleCredentials = GoogleCredentials.fromStream(new FileInputStream(new File(credentialsResource.toURI())));
+			GoogleCredentials googleCredentials = GoogleCredentials.fromStream(new FileInputStream(credentials));
 			googleCredentials.refreshIfExpired();
 			googleCredentials.refreshAccessToken();
 			
@@ -53,6 +55,22 @@ public class GoogleServiceAutoConfig {
 		} catch (IOException | URISyntaxException e) {
 			throw new GoogleApiSecurityException(MSGERROR.GOOGLE_OAUTH2_ERROR, e);
 		}
+	}
+
+	/**
+	 * Get a jSON file with the Google Credentials whether from resources folder or any other specified path.
+	 * 
+	 * @param credentialsPath
+	 * @return Google Credentials file
+	 * @throws URISyntaxException
+	 */
+	private File getCredentialsFile(String credentialsPath) throws URISyntaxException {
+		if (StringUtils.isBlank(credentialsPath)) {
+			URL credentialsResource = GoogleService.class.getResource(GOOGLEAPI.CLIENT_SECRET);
+			return new File(credentialsResource.toURI());
+		
+		}
+		return new File(credentialsPath);
 	}
 	
 	/**
