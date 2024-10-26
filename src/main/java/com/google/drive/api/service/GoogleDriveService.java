@@ -163,6 +163,10 @@ public interface GoogleDriveService extends GoogleService {
 	 */
 	default DriveFileList getFolderFiles(List<String> folderStructure, Integer pageSize, String pageToken) throws GoogleApiGeneralErrorException {
 		this.refreshCredentials();
+		
+		pageSize = Optional.ofNullable(pageSize).orElse(GOOGLEAPI.DEFAULT_PAGE_SIZE);
+		pageToken = Optional.ofNullable(pageToken).orElse(null);
+		
 		return this.doGetFolderFiles(folderStructure, pageSize <= GOOGLEAPI.MAX_PAGE_SIZE ? pageSize : GOOGLEAPI.MAX_PAGE_SIZE, pageToken);
 	}
 
