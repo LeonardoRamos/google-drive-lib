@@ -36,10 +36,7 @@ import com.google.drive.api.service.GoogleDriveService;
 @Service
 public class GoogleDriveServiceImpl implements GoogleDriveService {
 	
-	@Autowired
 	private GoogleCredentials credentials;
-	
-	@Autowired
 	private Drive driveService;
 	
 	/**
@@ -180,9 +177,7 @@ public class GoogleDriveServiceImpl implements GoogleDriveService {
 				
 				pageToken = result.getNextPageToken();
 				
-				result.getFiles().forEach(file -> {
-					driveFiles.add(this.buildDriveFile(file));
-				});
+				result.getFiles().forEach(file -> driveFiles.add(this.buildDriveFile(file)));
 			}
 			
 		} catch (Exception e) {
@@ -217,9 +212,7 @@ public class GoogleDriveServiceImpl implements GoogleDriveService {
 				
 				pageToken = result.getNextPageToken();
 				
-				result.getFiles().forEach(file -> {
-					driveFiles.add(this.buildDriveFile(file));
-				});
+				result.getFiles().forEach(file -> driveFiles.add(this.buildDriveFile(file)));
 			}
 			
 		} catch (Exception e) {
@@ -319,6 +312,26 @@ public class GoogleDriveServiceImpl implements GoogleDriveService {
 	 */
 	private boolean isEmptyResult(FileList result) {
 		return result == null || result.getFiles() == null || result.getFiles().isEmpty();
+	}
+
+	/**
+	 * Set the credentials.
+	 * 
+	 * @param credentials
+	 */
+	@Autowired
+	public void setCredentials(GoogleCredentials credentials) {
+		this.credentials = credentials;
+	}
+
+	/**
+	 * Set the driveService.
+	 * 
+	 * @param driveService
+	 */
+	@Autowired
+	public void setDriveService(Drive driveService) {
+		this.driveService = driveService;
 	}
 
 }
