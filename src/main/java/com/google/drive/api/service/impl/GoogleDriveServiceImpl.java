@@ -174,7 +174,6 @@ public class GoogleDriveServiceImpl implements GoogleDriveService {
 				      .execute();
 			
 			if (!this.isEmptyResult(result)) {
-				
 				pageToken = result.getNextPageToken();
 				
 				result.getFiles().forEach(file -> driveFiles.add(this.buildDriveFile(file)));
@@ -209,7 +208,6 @@ public class GoogleDriveServiceImpl implements GoogleDriveService {
 				      .execute();
 			
 			if (!this.isEmptyResult(result)) {
-				
 				pageToken = result.getNextPageToken();
 				
 				result.getFiles().forEach(file -> driveFiles.add(this.buildDriveFile(file)));
